@@ -3,13 +3,16 @@ import React, { useState } from 'react';
 import Header from '@/components/Header';
 import PrimeCalculator from '@/components/PrimeCalculator';
 import PrimeChart from '@/components/PrimeChart';
-import { getPrimeStats } from '@/utils/primeUtils';
+import TopDistances from '@/components/TopDistances';
+import { getPrimeStats, getDistanceDistribution } from '@/utils/primeUtils';
 
 const Index = () => {
   const [primeData, setPrimeData] = useState<[number, number][]>([]);
+  const [distanceDistribution, setDistanceDistribution] = useState<[number, number][]>([]);
   
   const handlePrimesCalculated = (data: [number, number][]) => {
     setPrimeData(data);
+    setDistanceDistribution(getDistanceDistribution(data));
   };
   
   const stats = getPrimeStats(primeData);
@@ -59,6 +62,10 @@ const Index = () => {
                     description="Mean distance between primes"
                   />
                 </div>
+              )}
+              
+              {distanceDistribution.length > 0 && (
+                <TopDistances data={distanceDistribution} />
               )}
             </div>
           </div>

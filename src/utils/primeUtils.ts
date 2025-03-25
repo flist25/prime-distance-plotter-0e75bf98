@@ -1,4 +1,3 @@
-
 /**
  * Checks if a number is prime
  */
@@ -97,4 +96,25 @@ export const getPrimeStats = (primes: [number, number][]): {
     maxDistance: max,
     avgDistance: distances.length > 0 ? sum / distances.length : 0
   };
+};
+
+/**
+ * Calculates the distribution of distances between consecutive primes
+ * Returns an array of [distance, count] tuples, sorted by count in descending order
+ */
+export const getDistanceDistribution = (primes: [number, number][]): [number, number][] => {
+  // Skip the first prime as it has a distance of 0
+  const distances = primes.slice(1).map(([_, distance]) => distance);
+  
+  // Count occurrences of each distance
+  const distribution: Record<number, number> = {};
+  
+  for (const distance of distances) {
+    distribution[distance] = (distribution[distance] || 0) + 1;
+  }
+  
+  // Convert to array of [distance, count] tuples and sort by count (descending)
+  return Object.entries(distribution)
+    .map(([distance, count]) => [parseInt(distance), count] as [number, number])
+    .sort((a, b) => b[1] - a[1]);
 };

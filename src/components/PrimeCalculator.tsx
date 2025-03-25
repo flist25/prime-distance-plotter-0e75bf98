@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { calculatePrimesAsync, getPrimeStats } from '@/utils/primeUtils';
 import Button from './Button';
 import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 
 interface PrimeCalculatorProps {
   onCalculated: (data: [number, number][]) => void;
@@ -58,6 +59,13 @@ const PrimeCalculator: React.FC<PrimeCalculatorProps> = ({ onCalculated, classNa
     setMax(value[0]);
   }, []);
   
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value > 0) {
+      setMax(value);
+    }
+  }, []);
+  
   return (
     <div className={`glass-card rounded-2xl p-6 shadow-sm border border-slate-200/50 animate-scale-in ${className}`}>
       <h2 className="text-lg font-medium mb-4">Prime Number Calculator</h2>
@@ -66,7 +74,7 @@ const PrimeCalculator: React.FC<PrimeCalculatorProps> = ({ onCalculated, classNa
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <label htmlFor="max-range" className="text-sm font-medium">
-              Maximum Number: {max.toLocaleString()}
+              Maximum Number:
             </label>
             
             {isCalculating && (
@@ -76,19 +84,34 @@ const PrimeCalculator: React.FC<PrimeCalculatorProps> = ({ onCalculated, classNa
             )}
           </div>
           
-          <Slider
-            id="max-range"
-            value={[max]}
-            min={100}
-            max={50000}
-            step={100}
-            onValueChange={handleSliderChange}
-            disabled={isCalculating}
-          />
+          <div className="flex space-x-4 items-center">
+            <div className="flex-1">
+              <Slider
+                id="max-range"
+                value={[max]}
+                min={100}
+                max={1000000}
+                step={100}
+                onValueChange={handleSliderChange}
+                disabled={isCalculating}
+              />
+            </div>
+            
+            <div className="w-28">
+              <Input
+                type="number"
+                value={max}
+                onChange={handleInputChange}
+                min="1"
+                disabled={isCalculating}
+                className="text-right"
+              />
+            </div>
+          </div>
           
           <div className="flex text-xs justify-between text-muted-foreground">
             <span>100</span>
-            <span>50,000</span>
+            <span>1,000,000</span>
           </div>
         </div>
         
@@ -112,7 +135,7 @@ const PrimeCalculator: React.FC<PrimeCalculatorProps> = ({ onCalculated, classNa
         
         {primes.length > 0 && !isCalculating && (
           <div className="text-sm text-muted-foreground">
-            Found {primes.length} prime numbers
+            Found {primes.length.toLocaleString()} prime numbers
           </div>
         )}
       </div>
